@@ -725,6 +725,25 @@
       margin-top: 12px;
     }
 
+    .toggle-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 13px;
+    }
+
+    .toggle-line input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--teal);
+    }
+
     .terminal-panel {
       background: #050805;
       color: #d8ffe0;
@@ -2410,7 +2429,7 @@
       min-height: calc(100vh - 114px);
       display: grid;
       grid-template-columns: 310px minmax(360px, 1fr) 300px;
-      grid-template-rows: minmax(0, 1fr) auto;
+      grid-template-rows: auto minmax(0, 1fr) auto;
       gap: 14px;
       isolation: isolate;
     }
@@ -2438,6 +2457,96 @@
       z-index: -1;
       background: linear-gradient(90deg, transparent, rgba(0, 184, 200, 0.42), rgba(244, 197, 66, 0.38), transparent);
       filter: blur(10px);
+    }
+
+    .home-update-banner {
+      grid-column: 1 / -1;
+      min-height: 78px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid rgba(244, 197, 66, 0.58);
+      border-left: 5px solid rgba(244, 197, 66, 0.92);
+      border-radius: 3px;
+      background:
+        linear-gradient(110deg, rgba(244, 197, 66, 0.18), rgba(0, 184, 200, 0.1) 52%, rgba(10, 15, 22, 0.88)),
+        rgba(10, 15, 22, 0.9);
+      color: #f8fafc;
+      text-align: left;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      z-index: 7;
+      cursor: pointer;
+    }
+
+    .home-update-banner:hover {
+      border-color: rgba(244, 197, 66, 0.86);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34), 0 0 0 1px rgba(244, 197, 66, 0.18);
+    }
+
+    .home-update-banner:focus-visible {
+      outline: 2px solid rgba(244, 197, 66, 0.92);
+      outline-offset: 2px;
+    }
+
+    .home-update-mark {
+      min-width: 78px;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      padding: 8px 10px;
+      border: 1px solid rgba(244, 197, 66, 0.45);
+      background: rgba(244, 197, 66, 0.13);
+      color: #f4c542;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .home-update-mark strong {
+      display: block;
+      color: #fff5cc;
+      font-size: 15px;
+      line-height: 1.1;
+    }
+
+    .home-update-copy {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .home-update-copy h3 {
+      margin: 0;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .home-update-copy p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .home-update-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
     .home-left-console,
@@ -2774,6 +2883,15 @@
         min-height: 480px;
       }
 
+      .home-update-banner {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .home-update-action {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+      }
+
       .home-roster-console {
         width: min(420px, calc(100% - 24px));
         left: 12px;
@@ -2788,6 +2906,19 @@
     @media (max-width: 720px) {
       .main {
         padding: 10px;
+      }
+
+      .home-update-banner {
+        min-height: 0;
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+
+      .home-update-mark {
+        width: 100%;
+        min-width: 0;
+        grid-auto-flow: column;
+        justify-content: start;
       }
 
       .topbar {
@@ -4581,6 +4712,11 @@
             <span>任务日志</span>
             <span class="level-badge" id="taskReady">0</span>
           </button>
+          <button class="nav-btn" data-page="updates">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v14H5zM8 9h8M8 13h5M16 17h.01" /></svg>
+            <span>更新公告</span>
+            <span class="level-badge" id="updateBadge">NEW</span>
+          </button>
         </div>
       </section>
 
@@ -4796,6 +4932,8 @@
 
       <section class="page" id="page-home">
         <section class="home-bridge">
+          <button class="home-update-banner" id="homeUpdateBanner" data-page="updates" type="button"></button>
+
           <aside class="home-left-console">
             <div class="home-kicker">RHODES IDLE TERMINAL</div>
             <h2 class="home-title">星砂作战终端</h2>
@@ -4961,6 +5099,11 @@
                     <option value="defence">防御训练</option>
                   </select>
                 </div>
+                <label class="toggle-line">
+                  <input id="autoEatToggle" type="checkbox" />
+                  <span>自动吃食物回血</span>
+                </label>
+                <div class="chips" id="autoEatInfo"></div>
                 <div class="bar-row">
                   <div class="bar-label"><span>生命值</span><b id="hpText">0 / 0</b></div>
                   <div class="bar"><i id="hpBar" class="warn"></i></div>
@@ -5027,11 +5170,44 @@
             <span class="pill" id="taskSummary">0 可领取</span>
           </div>
           <div class="panel-body">
+            <div class="bank-tools">
+              <select id="taskCategoryFilter">
+                <option value="all">全部分类</option>
+                <option value="每日">每日</option>
+                <option value="每周">每周</option>
+                <option value="主线">主线</option>
+                <option value="支线">支线</option>
+                <option value="阶段">阶段</option>
+                <option value="成就任务">成就任务</option>
+              </select>
+              <select id="taskStatusFilter">
+                <option value="all">全部状态</option>
+                <option value="ready">可领取</option>
+                <option value="progress">进行中</option>
+                <option value="claimed">已领取</option>
+              </select>
+              <button class="primary" data-claim-ready-tasks>一键领取当前筛选</button>
+            </div>
             <div class="task-list" id="taskList"></div>
             <div class="save-tools">
               <button class="secondary" id="logBtn">查看完整日志</button>
               <button class="danger" id="resetBtn">重置存档</button>
             </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="page-updates">
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>更新公告</h2>
+              <p>版本变更、修复重点和后续维护范围都会放在这里。</p>
+            </div>
+            <span class="pill" id="updateSummary">0 条</span>
+          </div>
+          <div class="panel-body">
+            <div class="task-list" id="updateNoticeList"></div>
           </div>
         </section>
       </section>
@@ -6497,6 +6673,53 @@
       { id: "ach100", category: "成就任务", name: "百条归档", desc: "领取 100 个成就。", done: () => claimedAchievementCount() >= 100, reward: { coins: 8000, ironChest: 1 } },
       { id: "ach500", category: "成就任务", name: "五百份签收", desc: "领取 500 个成就。", done: () => claimedAchievementCount() >= 500, reward: { coins: 30000, towerChest: 1 } },
       { id: "achPoint1500", category: "成就任务", name: "成就点数 1500", desc: "成就点数达到 1500。", done: () => claimedAchievementPoints() >= 1500, reward: { coins: 18000, abyssChest: 1 } }
+    ];
+
+    const updateNoticeDefs = [
+      {
+        version: "v1.6.4",
+        date: "2026-06-11",
+        title: "公告系统上线",
+        summary: "游戏内新增更新公告页；从本次开始只维护纯 HTML 版。",
+        items: [
+          "侧边栏和作战终端都可以进入“更新公告”。",
+          "后续调整只更新 outputs/atelier-idle-adventure.html，不再同步 APK、EXE 和三端压缩包。",
+          "公告页会记录关键修复、玩法变更和需要玩家注意的存档事项。"
+        ]
+      },
+      {
+        version: "v1.6.3",
+        date: "2026-06-11",
+        title: "任务筛选与自动补给",
+        summary: "任务页补了筛选和一键领取；本体战斗补强自动吃食物回血。",
+        items: [
+          "任务日志支持按分类、状态筛选，并可一键领取当前筛选下的可领奖励。",
+          "战斗页新增自动吃食物开关、触发血线、熟食库存和优先补给显示。",
+          "联动活动、大型活动、赛季活动补了战斗演出和最近结算反馈。"
+        ]
+      },
+      {
+        version: "v1.6.2",
+        date: "2026-06-10",
+        title: "大型活动可读性修复",
+        summary: "大型活动不再静默失败，页面直接显示挑战门槛。",
+        items: [
+          "大型活动显示当前战力、远征许可证数量和每个难度的推荐战力。",
+          "缺许可证或战力不足时按钮会禁用，并显示差距原因。",
+          "远征币新增兑换许可证入口，避免大型活动卡票。"
+        ]
+      },
+      {
+        version: "v1.6.1",
+        date: "2026-06-10",
+        title: "开罗经济回调",
+        summary: "修复开罗项目扣成本后又返还过量金币的问题。",
+        items: [
+          "开罗项目和经营线改为“回款”口径，不再点一次直接金币暴涨。",
+          "经营收益保留粉丝、研究点、口碑和战力等成长反馈。",
+          "开罗专项压力冒烟覆盖总工坊项目和全部经营动作。"
+        ]
+      }
     ];
 
     const hagimiCharacterDefs = [
@@ -8062,6 +8285,7 @@
         achievements: [],
         unlockedTitles: ["novice"],
         activeTitleId: "novice",
+        lastBattleScene: null,
         skillMatrix: makeHagimiSkillMatrix(),
         professions: makeProfessionState(),
         activeProfessionId: "traineeMiner",
@@ -8113,7 +8337,7 @@
         guideSeen: false,
         guideStep: 0,
         lastPlayablePage: "home",
-        settings: { reduceMotion: false, compactTopbar: false, autosave: true },
+        settings: { reduceMotion: false, compactTopbar: false, autosave: true, autoEat: true },
         endgame: { cleared: false, clearCount: 0, newGamePlus: 0, finalBossDefeated: false, lastClear: null },
         finalBossRun: null,
         selectedSkill: "mining",
@@ -8142,6 +8366,8 @@
     let lastTick = Date.now();
     let bankSearch = "";
     let bankFilter = "all";
+    let taskCategoryFilter = "all";
+    let taskStatusFilter = "all";
     let achievementPage = 0;
     let achievementFilter = "all";
     let achievementStatusFilter = "all";
@@ -8202,6 +8428,7 @@
           lastBlessingClaim: { ...fresh.hagimi.lastBlessingClaim, ...(savedHagimi.lastBlessingClaim || {}) },
           achievements: Array.isArray(savedHagimi.achievements) ? [...new Set(savedHagimi.achievements.map((id) => ACHIEVEMENT_LEGACY_ID_MAP.get(id) || id))] : fresh.hagimi.achievements,
           unlockedTitles: Array.isArray(savedHagimi.unlockedTitles) ? savedHagimi.unlockedTitles : fresh.hagimi.unlockedTitles,
+          lastBattleScene: savedHagimi.lastBattleScene || null,
           skillMatrix: { ...fresh.hagimi.skillMatrix, ...(savedHagimi.skillMatrix || {}) },
           professions: { ...fresh.hagimi.professions, ...(savedHagimi.professions || {}) },
           kairo: { ...fresh.hagimi.kairo, ...(savedHagimi.kairo || {}) },
@@ -9334,6 +9561,16 @@
       }
     }
 
+    function markHagimiBattleScene(kind, title, detail, result) {
+      state.hagimi.lastBattleScene = {
+        kind,
+        title,
+        detail,
+        result,
+        time: Date.now()
+      };
+    }
+
     function readStoryChapter(id) {
       const chapterId = Number(id);
       const chapter = storyDefs.find((entry) => entry.id === chapterId);
@@ -9383,6 +9620,7 @@
       state.hagimi.eventTokens += tokens;
       addCoins(600 + stage * 120);
       if (stage + 1 >= event.stages) state.hagimi.eventsCompleted += 1;
+      markHagimiBattleScene("event", event.name, `${stage + 1}/${event.stages}`, `活动代币 +${format(tokens)}`);
       addLog(`联动活动：${event.name} ${stage + 1}/${event.stages}，活动代币 +${tokens}。`);
       checkHagimiUnlocks();
       render();
@@ -9419,25 +9657,50 @@
       saveGame();
     }
 
+    function bigEventDifficultyInfo(event, progress, difficulty) {
+      const key = ["normal", "hard", "hell"].includes(difficulty) ? difficulty : "normal";
+      const labels = { normal: "普通", hard: "困难", hell: "地狱" };
+      const mult = key === "hell" ? 4.2 : key === "hard" ? 2.1 : 1;
+      const current = progress?.[key] || 0;
+      return {
+        key,
+        label: labels[key],
+        mult,
+        current,
+        required: Math.floor(event.baseCp * mult * (1 + current * 0.28)),
+        currency: Math.floor(60 * mult + current * 20),
+        gold: Math.floor(1500 * mult + current * 260)
+      };
+    }
+
     function runBigEvent(id, difficulty) {
       const event = bigEventDefs.find((entry) => entry.id === id);
-      if (!event || hagimiItemQty("raidTicket") <= 0) return;
+      if (!event) return;
       state.hagimi.bigEventProgress[id] = state.hagimi.bigEventProgress[id] || { normal: 0, hard: 0, hell: 0, raidDamage: 0, currency: 0 };
       const progress = state.hagimi.bigEventProgress[id];
-      const key = difficulty || "normal";
-      const mult = key === "hell" ? 4.2 : key === "hard" ? 2.1 : 1;
-      const current = progress[key] || 0;
-      const required = event.baseCp * mult * (1 + current * 0.28);
-      if (hagimiPower() < required) return;
+      const info = bigEventDifficultyInfo(event, progress, difficulty);
+      if (hagimiItemQty("raidTicket") <= 0) {
+        addLog(`大型活动未启动：${event.name}需要远征许可证。`);
+        render();
+        saveGame();
+        return;
+      }
+      if (hagimiPower() < info.required) {
+        addLog(`大型活动未启动：${event.name}${info.label}需要战力 ${format(info.required)}，当前 ${format(hagimiPower())}。`);
+        render();
+        saveGame();
+        return;
+      }
       addHagimiItem("raidTicket", -1);
-      progress[key] = current + 1;
-      const damage = Math.floor(hagimiPower() * (0.86 + (current % 4) * 0.07));
+      progress[info.key] = info.current + 1;
+      const damage = Math.floor(hagimiPower() * (0.86 + (info.current % 4) * 0.07));
       progress.raidDamage += damage;
-      progress.currency += Math.floor(60 * mult + current * 20);
+      progress.currency += info.currency;
       state.hagimi.bigEventsCompleted = Object.values(state.hagimi.bigEventProgress).reduce((sum, bp) => sum + bp.normal + bp.hard + bp.hell, 0);
-      addCoins(Math.floor(1500 * mult + current * 260));
-      if ((current + 1) % 4 === 0) addHagimiItem("starAmulet", 1);
-      addLog(`大型活动：${event.name} ${key} +1，Raid 伤害 +${format(damage)}。`);
+      addCoins(info.gold);
+      if ((info.current + 1) % 4 === 0) addHagimiItem("starAmulet", 1);
+      markHagimiBattleScene("big", `${event.name}${info.label}`, `Raid 伤害 ${format(damage)}`, `远征币 +${format(info.currency)}`);
+      addLog(`大型活动：${event.name}${info.label} +1，Raid 伤害 +${format(damage)}。`);
       checkHagimiUnlocks();
       render();
       saveGame();
@@ -9451,6 +9714,7 @@
       progress.currency -= cost;
       if (kind === "gold") addCoins(10000);
       else addHagimiItem("raidTicket", 5);
+      addLog(`大型活动兑换：${kind === "gold" ? "金币" : "远征许可证"}。`);
       render();
       saveGame();
     }
@@ -9480,6 +9744,7 @@
       state.hagimi.seasonalShards += shards;
       addCoins(300 + progress * 90);
       if ((progress + 1) % 5 === 0) addHagimiItem("seasonGift", 1);
+      markHagimiBattleScene("seasonal", event.name, `第 ${progress + 1} 关`, `赛季碎片 +${format(shards)}`);
       addLog(`赛季关卡：${event.name} ${progress + 1}，碎片 +${shards}。`);
       checkHagimiUnlocks();
       render();
@@ -9856,7 +10121,7 @@
       const defenceMitigation = Math.floor((levelOf("defence") + equipmentStats().defence) / 12);
       const incoming = Math.max(0, Math.floor(Math.random() * (enemy.maxHit + 1)) - defenceMitigation);
       state.playerHp = Math.max(0, state.playerHp - incoming);
-      if (state.playerHp <= maxHp() * 0.35) autoEat();
+      if (state.playerHp <= maxHp() * autoEatTriggerRatio()) autoEat();
       if (state.playerHp <= 0) {
         state.playerHp = Math.floor(maxHp() * 0.55);
         stopCurrent(`战斗撤退：补给不足，角色回到 ${state.playerHp} 生命值。`);
@@ -9888,13 +10153,44 @@
       addXp("hitpoints", amount * 0.34);
     }
 
+    function combatFoodIds() {
+      return Object.keys(itemDefs)
+        .filter((id) => itemDefs[id]?.heal)
+        .sort((a, b) => (itemDefs[b].heal || 0) - (itemDefs[a].heal || 0));
+    }
+
+    function combatFoodStock() {
+      return combatFoodIds().reduce((sum, id) => sum + bankQty(id), 0);
+    }
+
+    function autoEatTriggerRatio() {
+      return 0.42;
+    }
+
+    function autoEatTargetRatio() {
+      return 0.68;
+    }
+
     function autoEat() {
-      const foods = ["cookedLobster", "cookedSalmon", "cookedSardine", "cookedShrimp"];
-      const food = foods.find((id) => bankQty(id) > 0);
-      if (!food) return false;
-      addBank(food, -1);
-      state.playerHp = Math.min(maxHp(), state.playerHp + itemDefs[food].heal);
-      addLog(`低血量补给：消耗${itemDefs[food].name}，恢复 ${itemDefs[food].heal} 生命值。`);
+      if (state.settings?.autoEat === false) return false;
+      const hpMax = maxHp();
+      if ((state.playerHp || 0) > hpMax * autoEatTriggerRatio()) return false;
+      const used = {};
+      let healed = 0;
+      let guard = 0;
+      while ((state.playerHp || 0) < hpMax * autoEatTargetRatio() && guard < 20) {
+        guard += 1;
+        const food = combatFoodIds().find((id) => bankQty(id) > 0);
+        if (!food) break;
+        addBank(food, -1);
+        const heal = itemDefs[food].heal || 0;
+        state.playerHp = Math.min(hpMax, (state.playerHp || 0) + heal);
+        used[food] = (used[food] || 0) + 1;
+        healed += heal;
+      }
+      const parts = Object.entries(used).map(([id, count]) => `${itemDefs[id].name}x${count}`);
+      if (!parts.length) return false;
+      addLog(`自动补给：消耗${parts.join("、")}，恢复 ${healed} 生命值。`);
       return true;
     }
 
@@ -10094,14 +10390,17 @@
       });
     }
 
-    function claimTask(id) {
+    function claimTask(id, batch = false) {
       const task = taskDefs.find((entry) => entry.id === id);
-      if (!task || taskClaimed(task) || !task.done(state)) return;
+      if (!task || taskClaimed(task) || !task.done(state)) return false;
       state.tasksClaimed.push(taskClaimKey(task));
       applyTaskReward(task.reward);
-      addLog(`任务完成：${task.name}，奖励 ${rewardText(task.reward)}。`);
-      render();
-      saveGame();
+      if (!batch) {
+        addLog(`任务完成：${task.name}，奖励 ${rewardText(task.reward)}。`);
+        render();
+        saveGame();
+      }
+      return true;
     }
 
     function rewardText(reward) {
@@ -10241,6 +10540,7 @@
       renderBankPage();
       renderShopPage();
       renderTaskPage();
+      renderUpdatePage();
       renderHagimiPage();
       renderMahjongPage();
       renderDoudizhuPage();
@@ -10316,6 +10616,7 @@
       document.getElementById("bankCount").textContent = Object.keys(state.bank).length;
       document.getElementById("shopOwned").textContent = Object.keys(state.upgrades).length;
       document.getElementById("taskReady").textContent = readyTasks().length;
+      document.getElementById("updateBadge").textContent = updateNoticeDefs[0]?.version || "NEW";
       document.getElementById("hagimiSpeedSide").textContent = `x${state.hagimi.gameSpeed}`;
       document.getElementById("hagimiCpBadge").textContent = format(hagimiPower());
       document.getElementById("mahjongRankBadge").textContent = mahjongRanks[state.hagimi.mahjong.rank] || "新手";
@@ -10371,6 +10672,7 @@
         bank: "仓库终端",
         shop: "大型商店",
         tasks: "任务派发",
+        updates: "更新公告",
         hagimi: "哈吉米中枢",
         mahjong: "麻将馆",
         doudizhu: "斗地主牌桌",
@@ -10414,6 +10716,7 @@
       const menu = document.getElementById("homeMenuGrid");
       const feed = document.getElementById("homeFeedList");
       const roster = document.getElementById("homeRosterList");
+      const updateBanner = document.getElementById("homeUpdateBanner");
       if (!stats || !menu || !feed || !roster) return;
       const active = currentLabel();
       const activeTitle = titleDefs.find((title) => title.id === state.hagimi.activeTitleId) || titleDefs[0];
@@ -10429,6 +10732,17 @@
         hudStat(svg.sword, "本体战力", format(combatPower())),
         hudStat(svg.gem, "哈吉米战力", format(hagimiPower()))
       ].join("");
+      if (updateBanner) {
+        const latestUpdate = updateNoticeDefs[0] || { version: "NEW", date: "", title: "更新公告", summary: "查看本次维护内容。" };
+        updateBanner.innerHTML = `
+          <span class="home-update-mark">UPDATE<strong>${escapeHtml(latestUpdate.version)}</strong></span>
+          <div class="home-update-copy">
+            <h3>${escapeHtml(latestUpdate.title)}${latestUpdate.date ? ` · ${escapeHtml(latestUpdate.date)}` : ""}</h3>
+            <p>${escapeHtml(latestUpdate.summary)}</p>
+          </div>
+          <span class="home-update-action">查看公告</span>
+        `;
+      }
 
       const skillModules = Object.entries(skillDefs).map(([id, skill]) => ({
         skill: id,
@@ -10444,6 +10758,7 @@
         { page: "bank", title: "仓库终端", desc: "银行、材料、装备和出售管理。", icon: svg.ore, color: "#5f86b8", meta: [`估值 ${format(bankValue())}`, `${Object.keys(state.bank).length} 类物品`] },
         { page: "shop", title: "大型商店", desc: "补给、装备、材料、点卡和常驻道具。", icon: svg.coin, color: "#c49a4a", meta: [`已购 ${Object.keys(state.upgrades).length}`, `金币 ${format(state.coins)}`] },
         { page: "tasks", title: "任务派发", desc: "每日、每周、主线、支线和阶段任务。", icon: svg.scroll, color: "#709c8b", meta: [`可领 ${readyTasks().length}`, `${taskDefs.length} 任务`] },
+        { page: "updates", title: "更新公告", desc: "版本公告、修复记录和后续维护说明。", icon: svg.scroll, color: "#5d96b0", meta: [updateNoticeDefs[0]?.version || "NEW", `${updateNoticeDefs.length} 条`] },
         { page: "hagimi", title: "哈吉米中枢", desc: "角色看板、时间余额、通行证和模块状态。", icon: svg.gem, color: "#8e7db3", meta: [`战力 ${format(hagimiPower())}`, `角色 ${hagimiCharacterDefs.length}`] },
         { page: "mahjong", title: "雀魂麻将", desc: "选择角色，进行挂机牌局和段位累积。", icon: svg.scroll, color: "#5d96b0", meta: [mahjongRanks[state.hagimi.mahjong.rank] || "新手", `${format(state.hagimi.mahjong.points)} 点`] },
         { page: "doudizhu", title: "欢乐斗地主", desc: "角色出战、积分结算和名号推进。", icon: svg.scroll, color: "#b06f5d", meta: [doudizhuRanks[state.hagimi.doudizhu.rank] || "农民", `${format(state.hagimi.doudizhu.score)} 分`] },
@@ -10620,6 +10935,14 @@
 
     function renderCombatPage() {
       document.getElementById("combatStyle").value = state.combatStyle;
+      const autoEatToggle = document.getElementById("autoEatToggle");
+      if (autoEatToggle) autoEatToggle.checked = state.settings?.autoEat !== false;
+      const bestFood = combatFoodIds().find((id) => bankQty(id) > 0);
+      document.getElementById("autoEatInfo").innerHTML = `
+        <span class="chip">${state.settings?.autoEat === false ? "自动补给关闭" : `低于 ${Math.round(autoEatTriggerRatio() * 100)}% 触发`}</span>
+        <span class="chip">熟食 ${combatFoodStock()}</span>
+        <span class="chip">${bestFood ? `优先 ${itemDefs[bestFood].name}` : "无食物"}</span>
+      `;
       document.getElementById("combatPowerText").textContent = `战力 ${combatPower()}`;
       document.getElementById("hpText").textContent = `${format(state.playerHp || maxHp())} / ${maxHp()}`;
       document.getElementById("hpBar").style.width = pct((state.playerHp || maxHp()) / maxHp());
@@ -10761,13 +11084,52 @@
       return taskDefs.filter((task) => !taskClaimed(task) && task.done(state));
     }
 
-    function renderTaskPage() {
-      const ready = readyTasks();
-      document.getElementById("taskSummary").textContent = `${ready.length} 可领取`;
-      let lastCategory = "";
-      document.getElementById("taskList").innerHTML = taskDefs.map((task) => {
+    function taskPeriodText(task) {
+      return task.period === "daily" ? "每日刷新" : task.period === "weekly" ? "每周刷新" : "一次性";
+    }
+
+    function taskRows() {
+      return taskDefs.map((task) => {
         const claimed = taskClaimed(task);
         const done = task.done(state);
+        const status = claimed ? "claimed" : done ? "ready" : "progress";
+        return { task, claimed, done, status };
+      });
+    }
+
+    function currentTaskRows() {
+      return taskRows().filter((row) => {
+        const categoryMatch = taskCategoryFilter === "all" || row.task.category === taskCategoryFilter;
+        const statusMatch = taskStatusFilter === "all" || row.status === taskStatusFilter;
+        return categoryMatch && statusMatch;
+      });
+    }
+
+    function claimReadyTasks() {
+      const rows = currentTaskRows().filter((row) => row.done && !row.claimed);
+      let claimed = 0;
+      rows.forEach((row) => {
+        if (claimTask(row.task.id, true)) claimed += 1;
+      });
+      if (!claimed) return;
+      addLog(`任务批量领取：当前筛选 ${claimed} 个奖励已入账。`);
+      render();
+      saveGame();
+    }
+
+    function renderTaskPage() {
+      const ready = readyTasks();
+      const rows = currentTaskRows();
+      const filteredReady = rows.filter((row) => row.done && !row.claimed).length;
+      const categorySelect = document.getElementById("taskCategoryFilter");
+      const statusSelect = document.getElementById("taskStatusFilter");
+      if (categorySelect && categorySelect.value !== taskCategoryFilter) categorySelect.value = taskCategoryFilter;
+      if (statusSelect && statusSelect.value !== taskStatusFilter) statusSelect.value = taskStatusFilter;
+      document.getElementById("taskSummary").textContent = `${ready.length} 可领取 / 筛选 ${rows.length}`;
+      let lastCategory = "";
+      const claimReadyButton = document.querySelector("[data-claim-ready-tasks]");
+      if (claimReadyButton) claimReadyButton.disabled = filteredReady <= 0;
+      document.getElementById("taskList").innerHTML = rows.length ? rows.map(({ task, claimed, done }) => {
         const header = task.category !== lastCategory ? `<div class="achievement-empty">${escapeHtml(task.category)}</div>` : "";
         lastCategory = task.category;
         return `
@@ -10782,7 +11144,7 @@
             </div>
             <div class="chips">
               <span class="chip">${task.category}</span>
-              <span class="chip">${task.period === "daily" ? "每日刷新" : task.period === "weekly" ? "每周刷新" : "一次性"}</span>
+              <span class="chip">${taskPeriodText(task)}</span>
               <span class="chip">奖励：${rewardText(task.reward)}</span>
             </div>
             <div class="card-actions" style="margin-top:10px">
@@ -10791,7 +11153,28 @@
             </div>
           </article>
         `;
-      }).join("");
+      }).join("") : `<div class="achievement-empty">当前筛选下没有任务</div>`;
+    }
+
+    function renderUpdatePage() {
+      const summary = document.getElementById("updateSummary");
+      const list = document.getElementById("updateNoticeList");
+      if (!summary || !list) return;
+      summary.textContent = `${updateNoticeDefs[0]?.version || "NEW"} / ${updateNoticeDefs.length} 条`;
+      list.innerHTML = updateNoticeDefs.map((notice, index) => `
+        <article class="task-row ${index === 0 ? "idle-mission" : ""}">
+          <div class="row-head">
+            <div>
+              <h3>${escapeHtml(notice.title)}</h3>
+              <p>${escapeHtml(notice.summary)}</p>
+            </div>
+            <span class="pill">${escapeHtml(notice.version)} · ${escapeHtml(notice.date)}</span>
+          </div>
+          <div class="chips">
+            ${notice.items.map((item) => `<span class="chip">${escapeHtml(item)}</span>`).join("")}
+          </div>
+        </article>
+      `).join("");
     }
 
     function renderHagimiPage() {
@@ -11834,6 +12217,28 @@
       `;
     }
 
+    function renderHagimiInstantBattleScene(kind, idleTitle, idleText) {
+      const scene = state.hagimi.lastBattleScene?.kind === kind ? state.hagimi.lastBattleScene : null;
+      const title = scene?.title || idleTitle;
+      const detail = scene ? `${scene.detail} · ${scene.result}` : idleText;
+      const stamp = scene?.time ? new Date(scene.time).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : "待命";
+      return `
+        <div class="hagimi-battle-scene">
+          <div class="battle-readout">
+            <h3>${escapeHtml(title)}</h3>
+            <p>${escapeHtml(detail)}</p>
+            <div class="chips" style="margin-top:10px">
+              <span class="chip">${stamp}</span>
+              <span class="chip">当前战力 ${format(hagimiPower())}</span>
+            </div>
+          </div>
+          <div class="battle-unit player">哈</div>
+          ${scene ? `<div class="battle-slash"></div>` : ""}
+          <div class="battle-unit enemy">敌</div>
+        </div>
+      `;
+    }
+
     function renderHagimiDungeonPage() {
       const totalRooms = Object.entries(state.hagimi.dungeons).reduce((sum, [id, val]) => {
         const dungeon = hagimiDungeonDefs.find((entry) => entry.id === id);
@@ -12167,6 +12572,7 @@
       `).join("");
       document.getElementById("eventGrid").innerHTML = `
         <div class="event-dashboard">
+          ${renderHagimiInstantBattleScene("event", "联动战线待命", "选择活动关卡后，这里会显示最近一次挑战演出和结算。")}
           <section class="event-hero">
             <div>
               <div class="row-head">
@@ -12207,14 +12613,50 @@
     }
 
     function renderBigEventPage() {
-      document.getElementById("bigEventSummary").textContent = `${state.hagimi.bigEventsCompleted} 次`;
-      document.getElementById("bigEventGrid").innerHTML = bigEventDefs.map((event) => {
+      const tickets = hagimiItemQty("raidTicket");
+      const power = hagimiPower();
+      document.getElementById("bigEventSummary").textContent = `${state.hagimi.bigEventsCompleted} 次 / 许可证 ${tickets}`;
+      document.getElementById("bigEventGrid").innerHTML = renderHagimiInstantBattleScene("big", "大型远征待命", "挑战普通、困难或地狱难度后，这里会显示 Raid 伤害和远征币。") + bigEventDefs.map((event) => {
         const progress = state.hagimi.bigEventProgress[event.id] || { normal: 0, hard: 0, hell: 0, raidDamage: 0, currency: 0 };
+        const difficultyRows = ["normal", "hard", "hell"].map((difficulty) => {
+          const info = bigEventDifficultyInfo(event, progress, difficulty);
+          const canRun = tickets > 0 && power >= info.required;
+          const reason = tickets <= 0 ? "缺许可证" : power < info.required ? `战力差 ${format(info.required - power)}` : `奖励币 +${format(info.currency)}`;
+          const buttonClass = difficulty === "hell" ? "danger" : "primary";
+          return `
+            <div class="shop-row">
+              <div class="row-head">
+                <div>
+                  <h3>${info.label}</h3>
+                  <p>推荐战力 ${format(info.required)}；金币 +${format(info.gold)}；远征币 +${format(info.currency)}。</p>
+                </div>
+                <span class="pill">${reason}</span>
+              </div>
+              <div class="card-actions" style="margin-top:8px">
+                <button class="${buttonClass}" data-run-big-event="${event.id}" data-big-difficulty="${info.key}" ${canRun ? "" : "disabled"}>挑战${info.label}</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+        const canClaimGold = progress.currency >= 100;
+        const canClaimTicket = progress.currency >= 220;
         return `
           <article class="enemy-card">
-            <div class="row-head"><div><h3>${event.name}</h3><p>${event.theme}</p></div><span class="pill">币 ${format(progress.currency)}</span></div>
-            <div class="chips"><span class="chip">普通 ${progress.normal}</span><span class="chip">困难 ${progress.hard}</span><span class="chip">地狱 ${progress.hell}</span><span class="chip">伤害 ${format(progress.raidDamage)}</span></div>
-            <div class="card-actions" style="margin-top:10px"><button class="primary" data-run-big-event="${event.id}" data-big-difficulty="normal">普通</button><button class="primary" data-run-big-event="${event.id}" data-big-difficulty="hard">困难</button><button class="danger" data-run-big-event="${event.id}" data-big-difficulty="hell">地狱</button><button class="secondary" data-claim-big-event="${event.id}" data-big-claim="gold">换金币</button></div>
+            <div class="row-head"><div><h3>${event.name}</h3><p>${event.theme}</p></div><span class="pill">远征币 ${format(progress.currency)}</span></div>
+            <div class="chips">
+              <span class="chip">当前战力 ${format(power)}</span>
+              <span class="chip">远征许可证 ${tickets}</span>
+              <span class="chip">普通 ${progress.normal}</span>
+              <span class="chip">困难 ${progress.hard}</span>
+              <span class="chip">地狱 ${progress.hell}</span>
+              <span class="chip">Raid 伤害 ${format(progress.raidDamage)}</span>
+            </div>
+            <div class="event-mission-grid" style="margin-top:10px">${difficultyRows}</div>
+            <div class="card-actions" style="margin-top:10px">
+              <button class="secondary" data-claim-big-event="${event.id}" data-big-claim="gold" ${canClaimGold ? "" : "disabled"}>100 币换金币</button>
+              <button class="secondary" data-claim-big-event="${event.id}" data-big-claim="ticket" ${canClaimTicket ? "" : "disabled"}>220 币换许可证</button>
+              <button class="secondary" data-page="hagimi-shop">补许可证</button>
+            </div>
           </article>
         `;
       }).join("");
@@ -12222,7 +12664,7 @@
 
     function renderSeasonalPage() {
       document.getElementById("seasonalSummary").textContent = `碎片 ${format(state.hagimi.seasonalShards)}`;
-      document.getElementById("seasonalGrid").innerHTML = seasonalDefs.map((event) => {
+      document.getElementById("seasonalGrid").innerHTML = renderHagimiInstantBattleScene("seasonal", "赛季战线待命", "挑战赛季关卡后，这里会显示本次关卡和碎片收益。") + seasonalDefs.map((event) => {
         const progress = state.hagimi.seasonalProgress[event.id] || 0;
         const last = state.hagimi.lastBlessingClaim[event.id] || 0;
         const blessingReady = Date.now() - last >= 20 * 60 * 60 * 1000;
@@ -12283,6 +12725,7 @@
         const equip = event.target.closest("[data-equip]");
         const eat = event.target.closest("[data-eat]");
         const claim = event.target.closest("[data-claim]");
+        const claimReadyTasksBtn = event.target.closest("[data-claim-ready-tasks]");
         const viewBank = event.target.closest("[data-view-bank]");
         const selectHagimiChar = event.target.closest("[data-select-hagimi-char]");
         const selectMahjongChar = event.target.closest("[data-select-mahjong-char]");
@@ -12351,6 +12794,7 @@
         if (equip) equipItem(equip.dataset.equip);
         if (eat) eatItem(eat.dataset.eat);
         if (claim) claimTask(claim.dataset.claim);
+        if (claimReadyTasksBtn) claimReadyTasks();
         if (viewBank && viewBank.dataset.viewBank) {
           bankSearch = itemDefs[viewBank.dataset.viewBank]?.name || "";
           document.getElementById("bankSearch").value = bankSearch;
@@ -12510,6 +12954,14 @@
         bankFilter = event.target.value;
         renderBankPage();
       });
+      document.getElementById("taskCategoryFilter").addEventListener("change", (event) => {
+        taskCategoryFilter = event.target.value;
+        renderTaskPage();
+      });
+      document.getElementById("taskStatusFilter").addEventListener("change", (event) => {
+        taskStatusFilter = event.target.value;
+        renderTaskPage();
+      });
       document.getElementById("achievementCategoryFilter").addEventListener("change", (event) => {
         achievementFilter = event.target.value;
         achievementPage = 0;
@@ -12528,6 +12980,12 @@
       document.getElementById("combatStyle").addEventListener("change", (event) => {
         state.combatStyle = event.target.value;
         addLog(`战斗训练方式调整为：${event.target.options[event.target.selectedIndex].textContent}。`);
+        render();
+        saveGame();
+      });
+      document.getElementById("autoEatToggle").addEventListener("change", (event) => {
+        state.settings.autoEat = event.target.checked;
+        addLog(`自动补给已${state.settings.autoEat ? "开启" : "关闭"}。`);
         render();
         saveGame();
       });
